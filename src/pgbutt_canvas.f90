@@ -1,6 +1,6 @@
-module canvas_module
-    use viewport_module
-    use linked_viewports_module
+module pgbutt_canvas
+    use pgbutt_viewport
+    use pgbutt_linked_viewports
     implicit none
 
     type :: CanvasDef
@@ -84,4 +84,4 @@ contains
 
     end subroutine plot_viewport_boundaries
 
-end module canvas_module
+end module pgbutt_canvas

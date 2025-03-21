@@ -1,6 +1,8 @@
 # Define the library
 lib_LTLIBRARIES = libbutton90.la
-libbutton90_la_SOURCES = viewport_module.f90 linked_viewports_module.f90 canvas_module.f90
+libbutton90_la_SOURCES = pgbutt_viewport.f90 \
+pgbutt_linked_viewports.f90 \
+pgbutt_canvas.f90
 
 # Define the program that depends on the library
 bin_PROGRAMS = samplebutton
@@ -18,5 +20,9 @@ samplebutton.o: samplebutton.f90 $(BUILT_SOURCES)
 
 # Specify the directory for module files
 AM_CPPFLAGS = -I$(srcdir)
+
+# Install .mod files
+moddir = $(includedir)
+mod_DATA = $(BUILT_SOURCES)
 
 CLEANFILES = *.mod *.o

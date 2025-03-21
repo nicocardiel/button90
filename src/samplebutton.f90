@@ -1,7 +1,7 @@
 ! gfortran -o test test.f90 *_module.f90 -L/opt/homebrew/opt/libx11/lib -L/opt/homebrew/opt/pgplot/lib -lpgplot -lX11
 
 program test_canvas
-    use canvas_module
+    use pgbutt_canvas
     implicit none
 
     integer :: ldev

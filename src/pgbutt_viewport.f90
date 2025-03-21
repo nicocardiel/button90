@@ -1,4 +1,4 @@
-module viewport_module
+module pgbutt_viewport
     implicit none
 
     type :: Viewport
@@ -41,4 +41,4 @@ contains
         print *, this%x1v, this%x2v, this%y1v, this%y2v
     end subroutine print_corners
 
-end module viewport_module
+end module pgbutt_viewport

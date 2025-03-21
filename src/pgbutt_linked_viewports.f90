@@ -1,5 +1,5 @@
-module linked_viewports_module
-    use viewport_module
+module pgbutt_linked_viewports
+    use pgbutt_viewport
     implicit none
     
     type :: LinkedViewports
@@ -46,4 +46,4 @@ contains
         end do
     end subroutine print_viewports
 
-end module linked_viewports_module
+end module pgbutt_linked_viewports

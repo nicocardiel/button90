@@ -4,6 +4,8 @@ syntax: glob
 src/*.dSYM
 src/*.o
 src/*.mod
+src/*.lo
+src/.libs/
 
 Makefile
 Makefile.in
@@ -23,7 +25,7 @@ libtool
 ltmain.sh
 m4
 missing
-src/libbutton90.a
+src/libbutton90.la
 src/Makefile
 src/Makefile.in
 src/samplebutton
