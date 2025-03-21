@@ -1,5 +1,6 @@
 module pgbutt_rpgfunctions
     implicit none
+
 contains
 
     !--------------------------------------------------------------------------
@@ -25,7 +26,18 @@ contains
 
         idgraphics = pgopen(defdev)
 
-        call pgenv(0., 1., 0., 1., 0, -2)
+        call pgvport(0., 1., 0., 1.)
+        call pgwindow(0., 1., 0., 1., 0, 0)
+        if (verbose) then
+            call pgsci(7)
+            call pgmove(0., 0.)
+            call pgdraw(1., 0.)
+            call pgdraw(1., 1.)
+            call pgdraw(0., 1.)
+            call pgdraw(0., 0.)
+            call pgsci(1)
+        end if
+
         ! Redefine colors
         !   0: black
         !   1: white

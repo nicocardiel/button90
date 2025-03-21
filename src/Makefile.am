@@ -1,6 +1,8 @@
 # Define the library
 lib_LTLIBRARIES = libbutton90.la
-libbutton90_la_SOURCES = pgbutt_viewport.f90 \
+libbutton90_la_SOURCES = \
+pgbutt_button.f90 \
+pgbutt_viewport.f90 \
 pgbutt_linked_viewports.f90 \
 pgbutt_canvas.f90 \
 pgbutt_rpgfunctions.f90
