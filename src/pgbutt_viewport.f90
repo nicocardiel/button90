@@ -11,11 +11,18 @@ module pgbutt_viewport
 
 contains
 
-    subroutine plot_boundary(this, verbose)
+    subroutine plot_boundary(this, verbose_)
         implicit none
         class(Viewport), intent(in) :: this
-        logical, intent(in) :: verbose
+        logical, intent(in), optional :: verbose_
+
         real :: x(5), y(5)
+        logical :: verbose
+
+        ! default values
+        verbose = .false.
+        if (present(verbose_)) verbose = verbose_
+
         if(verbose)then
             print *, 'xv1:', this%x1v
             print *, 'xv2:', this%x2v

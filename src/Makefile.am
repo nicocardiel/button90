@@ -2,7 +2,8 @@
 lib_LTLIBRARIES = libbutton90.la
 libbutton90_la_SOURCES = pgbutt_viewport.f90 \
 pgbutt_linked_viewports.f90 \
-pgbutt_canvas.f90
+pgbutt_canvas.f90 \
+pgbutt_rpgfunctions.f90
 
 # Define the program that depends on the library
 bin_PROGRAMS = samplebutton

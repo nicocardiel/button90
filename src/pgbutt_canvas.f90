@@ -14,6 +14,9 @@ module pgbutt_canvas
 
 contains
 
+    !--------------------------------------------------------------------------
+    !> Add a generic viewport
+    !--------------------------------------------------------------------------
     subroutine add_viewport(list, x1v, x2v, y1v, y2v)
         implicit none
         type(LinkedViewports) :: list
@@ -37,9 +40,11 @@ contains
             current%next => new_viewport
         end if
         list%count = list%count + 1   ! Increment the counter
-
     end subroutine add_viewport
 
+    !--------------------------------------------------------------------------
+    !> Add a button viewport
+    !--------------------------------------------------------------------------
     subroutine add_button_viewport(this, x1v, x2v, y1v, y2v)
         implicit none
         class(CanvasDef), intent(inout) :: this
@@ -47,6 +52,9 @@ contains
         call add_viewport(this%list_button_viewports, x1v, x2v, y1v, y2v)
     end subroutine add_button_viewport
 
+    !--------------------------------------------------------------------------
+    !> Add a plot viewport
+    !--------------------------------------------------------------------------
     subroutine add_plot_viewport(this, x1v, x2v, y1v, y2v)
         implicit none
         class(CanvasDef), intent(inout) :: this
@@ -54,13 +62,22 @@ contains
         call add_viewport(this%list_plot_viewports, x1v, x2v, y1v, y2v)
     end subroutine add_plot_viewport
 
-    subroutine plot_viewport_boundaries(this, verbose)
+    !--------------------------------------------------------------------------
+    !> Display the boundaries of all the viewports
+    !--------------------------------------------------------------------------
+    subroutine plot_viewport_boundaries(this, verbose_)
         implicit none
         class(CanvasDef), intent(in) :: this
-        logical, intent(in) :: verbose
+        logical, intent(in), optional :: verbose_
+
         integer :: i, num
         integer :: old_line_style
         type(Viewport), pointer :: viewport_ptr
+        logical :: verbose
+
+        ! default values
+        verbose = .false.
+        if (present(verbose_)) verbose = verbose_
 
         num = this%list_button_viewports%count
         if (num .gt. 0) then
@@ -80,8 +97,6 @@ contains
                 call pgsls(old_line_style)
             end do
         end if
-
-
     end subroutine plot_viewport_boundaries
 
 end module pgbutt_canvas
