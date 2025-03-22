@@ -28,7 +28,7 @@ contains
         idgraphics = pgopen(defdev)
 
         call pgvport(0., 1., 0., 1.)
-        call pgwindow(0., 1., 0., 1., 0, 0)
+        call pgwindow(0., 1., 0., 1.)
         if (verbose) then
             call pgsci(7)
             call pgmove(0., 0.)
@@ -50,13 +50,12 @@ contains
     end subroutine rpgbegin
 
     !--------------------------------------------------------------------------
-    subroutine rpgenv(viewport_ptr, xmin, xmax, ymin, ymax, just, axis)
+    subroutine rpgenv(ptr, xmin, xmax, ymin, ymax, just, axis)
         implicit none
-        type(Viewport), pointer, intent(in) :: viewport_ptr
+        type(Viewport), pointer, intent(inout) :: ptr
         real, intent(in) :: xmin, xmax, ymin, ymax
         integer, intent(in) :: just, axis
 
-        real :: x1v, x2v, y1v, y2v
         character(len=10) :: xopts, yopts
 
         if(xmin.eq.xmax)then
@@ -67,18 +66,17 @@ contains
             return
         end if
 
-        x1v = viewport_ptr%x1v
-        x2v = viewport_ptr%x2v
-        y1v = viewport_ptr%y1v
-        y2v = viewport_ptr%y2v
-
-        call pgvport(x1v, x2v, y1v, y2v)
+        call pgvport(ptr%x1v, ptr%x2v, ptr%y1v, ptr%y2v)
 
         if(just.eq.1)then
             call pgwnad(xmin,xmax,ymin,ymax)
         else
             call pgswin(xmin,xmax,ymin,ymax)
         end if
+        ptr%x1w = xmin
+        ptr%x2w = xmax
+        ptr%y1w = ymin
+        ptr%y2w = ymax
         !
         yopts='*'
         if(axis.eq.-2)then
@@ -108,6 +106,22 @@ contains
         ! draw box
         call pgbox(xopts,0.0,0,yopts,0.0,0)
 
+        call pgvport(0.,1.,0.,1.)
+        call pgwindow(0.,1.,0.,1.)
+
     end subroutine rpgenv
+
+    !--------------------------------------------------------------------------
+    subroutine rpgline(ptr, n, x, y)
+        implicit none
+        type(Viewport), pointer, intent(in) :: ptr
+        integer, intent(in) :: n
+        real, intent(in) :: x(:), y(:)
+        call pgvport(ptr%x1v, ptr%x2v, ptr%y1v, ptr%y2v)
+        call pgwindow(ptr%x1w, ptr%x2w, ptr%y1w, ptr%y2w)
+        call pgline(n, x, y)
+        call pgvport(0.,1.,0.,1.)
+        call pgwindow(0.,1.,0.,1.)
+    end subroutine rpgline
 
 end module pgbutt_rpgfunctions

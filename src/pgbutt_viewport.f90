@@ -23,6 +23,7 @@ module pgbutt_viewport
         procedure :: print_corners
         procedure :: button
         procedure :: ifbutton
+        procedure :: world
     end type Viewport
 
 contains
@@ -285,5 +286,23 @@ contains
             end do
         end if
     end subroutine ifbutton
+
+    !--------------------------------------------------------------------------
+    subroutine world(this, xc, yc, xworld, yworld)
+        implicit none
+        class(Viewport), intent(in) :: this
+        real, intent(in) :: xc, yc
+        real, intent(out) :: xworld, yworld
+
+        real :: x1, x2, y1, y2
+
+        call pgvport(this%x1v, this%x2v, this%y1v, this%y2v)
+        call pgwindow(this%x1w, this%x2w, this%y1w, this%y2w)
+        call pgqvp(0, x1, x2, y1, y2)
+        xworld = this%x1w + (xc - x1)/(x2 - x1) * (this%x2w - this%x1w)
+        yworld = this%y1w + (yc - y1)/(y2 - y1) * (this%y2w - this%y1w)
+        call pgvport(0.,1.,0.,1.)
+        call pgwindow(0.,1.,0.,1.)
+    end subroutine world
 
 end module pgbutt_viewport
