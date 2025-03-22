@@ -272,7 +272,6 @@ contains
         end if
 
         if (mouse_inside(this, xc, yc)) then
-            print *, 'Mouse inside viewport!'
             do i = 1, this%nx * this%ny
                 if (this%button_array(i)%exist) then
                     if ( (this%button_array(i)%x1 .le. xc) .and. &

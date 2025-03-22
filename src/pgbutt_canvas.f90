@@ -9,6 +9,7 @@ module pgbutt_canvas
         type(LinkedViewports) :: list_plot_viewports
     contains
         procedure :: get_viewport_from_mouse
+        procedure :: get_button_from_mouse
         procedure :: add_button_viewport
         procedure :: add_plot_viewport
         procedure :: plot_viewport_boundaries
@@ -17,16 +18,21 @@ module pgbutt_canvas
 contains
 
     !--------------------------------------------------------------------------
-    !> Return the viewport corresponding to the current mouse location
+    !> Return viewport corresponding to current mouse location
     !--------------------------------------------------------------------------
-    subroutine get_viewport_from_mouse(this, xc, yc, verbose, viewport_ptr)
+    subroutine get_viewport_from_mouse(this, xc, yc, viewport_ptr, verbose_)
         implicit none
         class(CanvasDef), intent(inout) :: this
         real, intent(in) :: xc, yc
-        logical :: verbose
         type(Viewport), pointer, intent(out) :: viewport_ptr
+        logical, intent(in), optional :: verbose_
 
         integer :: i, num
+        logical :: verbose
+
+        ! default values
+        verbose = .false.
+        if (present(verbose_)) verbose = verbose_
 
         ! find the first viewport enclosing (XC, YC)
         num = this%list_button_viewports%count
@@ -62,6 +68,35 @@ contains
         ! mouse outside any viewport
         viewport_ptr => null()
     end subroutine get_viewport_from_mouse
+
+    !--------------------------------------------------------------------------
+    !> Return viewport and button corresponding to current mouse location
+    !--------------------------------------------------------------------------
+    subroutine get_button_from_mouse(this, xc, yc, viewport_ptr, nb, verbose_)
+        implicit none
+        class(CanvasDef), intent(inout) :: this
+        real, intent(in) :: xc, yc
+        type(Viewport), pointer, intent(out) :: viewport_ptr
+        integer, intent(out) :: nb
+        logical, intent(in), optional :: verbose_
+
+        logical :: verbose
+
+        ! default values
+        verbose = .false.
+        if (present(verbose_)) verbose = verbose_
+
+        nb = 0
+        call this%get_viewport_from_mouse(xc, yc, viewport_ptr, verbose)
+        if (associated(viewport_ptr)) then
+            call viewport_ptr%ifbutton(xc, yc, nb)
+            if (verbose) then
+                print *, 'Found #', viewport_ptr%number
+                print *, 'nb=', nb
+            end if
+        end if
+
+    end subroutine get_button_from_mouse
 
     !--------------------------------------------------------------------------
     !> Add a generic viewport
