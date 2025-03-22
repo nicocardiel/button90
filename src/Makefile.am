@@ -5,7 +5,8 @@ pgbutt_button.f90 \
 pgbutt_viewport.f90 \
 pgbutt_linked_viewports.f90 \
 pgbutt_canvas.f90 \
-pgbutt_rpgfunctions.f90
+pgbutt_rpgfunctions.f90 \
+pgbutt_modules.f90
 
 # Define the program that depends on the library
 bin_PROGRAMS = samplebutton

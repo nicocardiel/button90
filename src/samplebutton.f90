@@ -1,6 +1,5 @@
 program samplebutton
-    use pgbutt_rpgfunctions
-    use pgbutt_canvas
+    use pgbutt_modules
     implicit none
 
     type(CanvasDef) :: canvas
