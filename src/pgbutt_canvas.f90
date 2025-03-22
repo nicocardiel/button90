@@ -72,10 +72,11 @@ contains
     !--------------------------------------------------------------------------
     !> Return viewport and button corresponding to current mouse location
     !--------------------------------------------------------------------------
-    subroutine get_button_from_mouse(this, xc, yc, viewport_ptr, nb, verbose_)
+    subroutine get_button_from_mouse(this, xc, yc, ch, viewport_ptr, nb, verbose_)
         implicit none
         class(CanvasDef), intent(inout) :: this
-        real, intent(in) :: xc, yc
+        real, intent(out) :: xc, yc
+        character(len=1), intent(out) :: ch
         type(Viewport), pointer, intent(out) :: viewport_ptr
         integer, intent(out) :: nb
         logical, intent(in), optional :: verbose_
@@ -86,6 +87,7 @@ contains
         verbose = .false.
         if (present(verbose_)) verbose = verbose_
 
+        call pgcurs(xc, yc, ch)
         nb = 0
         call this%get_viewport_from_mouse(xc, yc, viewport_ptr, verbose)
         if (associated(viewport_ptr)) then

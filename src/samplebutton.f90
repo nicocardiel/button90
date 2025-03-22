@@ -27,8 +27,7 @@ program samplebutton
 
     ! main loop
     do
-        call pgcurs(xc, yc, ch)
-        call canvas%get_button_from_mouse(xc, yc, ptr, nb, verbose)
+        call canvas%get_button_from_mouse(xc, yc, ch, ptr, nb, verbose)
         
         if (associated(ptr, ptr1)) then
             if (nb.eq.1) then
