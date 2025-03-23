@@ -124,4 +124,26 @@ contains
         call pgwindow(0.,1.,0.,1.)
     end subroutine rpgline
 
+    !--------------------------------------------------------------------------
+    subroutine rpgerasw(ptr, ncolor_)
+        implicit none
+        type(Viewport), pointer, intent(inout) :: ptr
+        integer, intent(in), optional :: ncolor_
+
+        integer :: ncolor, oldci
+
+        ncolor = 0
+        if (present(ncolor_)) ncolor = ncolor_
+        call pgqci(oldci)
+        call pgsci(ncolor)
+        call pgrect(ptr%x1v, ptr%x2v, ptr%y1v, ptr%y2v)
+        call pgsci(oldci)
+        call rpgenv(ptr, ptr%x1w, ptr%x2w, ptr%y1w, ptr%y2w, 0, 0)
+        call pgmove(ptr%x1v, ptr%y1v)
+        call pgdraw(ptr%x2v, ptr%y1v)
+        call pgdraw(ptr%x2v, ptr%y2v)
+        call pgdraw(ptr%x1v, ptr%y2v)
+        call pgdraw(ptr%x1v, ptr%y1v)
+    end subroutine rpgerasw
+
 end module pgbutt_rpgfunctions
