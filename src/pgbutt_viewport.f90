@@ -4,15 +4,17 @@ module pgbutt_viewport
 
     type :: Viewport
       ! viewport coordinates
-      real :: x1v, x2v, y1v, y2v
+      real :: x1v=0.0, x2v=1.0, y1v=0.0, y2v=1.0
       ! number of buttons in X and Y
       integer :: nx, ny
       ! world coordinates for plot
-      real :: x1w, x2w, y1w, y2w
+      real :: x1w=0.0, x2w=1.0, y1w=0.0, y2w=0.0
+      ! just and axis por pgenv
+      integer :: just=0, axis=0
       ! viewport number in viewport list
       integer :: number
       ! viewport availability
-      logical :: active
+      logical :: active=.true.
       ! buttons
       type(SingleButton), allocatable :: button_array(:)
       ! auxiliary pointer to  next Viewport object

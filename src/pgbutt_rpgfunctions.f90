@@ -138,7 +138,7 @@ contains
         call pgsci(ncolor)
         call pgrect(ptr%x1v, ptr%x2v, ptr%y1v, ptr%y2v)
         call pgsci(oldci)
-        call rpgenv(ptr, ptr%x1w, ptr%x2w, ptr%y1w, ptr%y2w, 0, 0)
+        call rpgenv(ptr, ptr%x1w, ptr%x2w, ptr%y1w, ptr%y2w, ptr%just, ptr%axis)
         call pgmove(ptr%x1v, ptr%y1v)
         call pgdraw(ptr%x2v, ptr%y1v)
         call pgdraw(ptr%x2v, ptr%y2v)

@@ -7,6 +7,7 @@ program samplebutton
     type(Viewport), pointer :: ptr
     integer :: i
     integer :: nb
+    integer :: ncolor=1
     real :: xc, yc
     real :: xworld, yworld
     real :: xx(100), yy(100)
@@ -24,6 +25,7 @@ program samplebutton
     call ptr1%button(1, 'sin', 0)
     call ptr1%button(2, 'cos', 0)
     call ptr1%button(3, 'clear', 0)
+    call ptr1%button(3, 'clear', 3)
     call ptr1%button(4, 'color', 0)
     call ptr1%button(6, 'EXIT', 0)
     call ptr1%button(7, 'mode 0', 0)
@@ -47,8 +49,11 @@ program samplebutton
                     yy(i) = sin(xx(i) * 2 * 3.141593)
                 end do
                 call rpgenv(ptr2, 0., 1., -1.1, 1.1, 0, 0)
+                call pgsci(ncolor)
                 call rpgline(ptr2, 100, xx, yy)
+                call pgsci(1)
                 call ptr%button(nb, 'sin', 0)
+                call ptr%button(3, 'clear', 0)
             elseif (nb.eq.2) then
                 call ptr%button(nb, 'cos', 5)
                 do i = 1, 100
@@ -56,17 +61,39 @@ program samplebutton
                     yy(i) = cos(xx(i) * 2 * 3.141593)
                 end do
                 call rpgenv(ptr2, 0., 1., -1.1, 1.1, 0, 0)
+                call pgsci(ncolor)
                 call rpgline(ptr2, 100, xx, yy)
+                call pgsci(1)
                 call ptr1%button(nb, 'cos', 0)
+                call ptr%button(3, 'clear', 0)
             elseif (nb.eq.3) then
                 call ptr%button(nb, 'clear', 5)
                 call rpgerasw(ptr2)
                 call ptr%button(nb, 'clear', 0)
+            elseif (nb.eq.4) then
+                call ptr%button(nb, 'color', 5)
+                write(*, '(a,$)')'Current PGPLOT color is number: '
+                write(*,*) ncolor
+                write(*, '(a,$)')'Enter new PGPLOT color number: '
+                read(*,*) ncolor 
+                call ptr%button(nb, 'color', 0)
             elseif (nb.eq.6) then
                 call ptr1%button(6, 'EXIT', 5)
                 write(*, '(a,$)') 'Press <RETURN> to EXIT'
                 read(*, *)
                 exit
+            elseif (nb.eq.7) then
+                print *, 'Example of mode 0 button'
+            elseif (nb.eq.8) then
+                print *, 'Example of mode 1 button'
+            elseif (nb.eq.9) then
+                print *, 'Example of mode 2 button'
+            elseif (nb.eq.10) then
+                print *, 'Example of mode 3 button'
+            elseif (nb.eq.11) then
+                print *, 'Example of mode 4 button'
+            elseif (nb.eq.12) then
+                print *, 'Example of mode 5 button'
             end if
         elseif (associated(ptr, ptr2)) then
             call ptr2%world(xc, yc, xworld, yworld)
