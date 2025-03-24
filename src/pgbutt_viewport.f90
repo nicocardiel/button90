@@ -19,6 +19,8 @@ module pgbutt_viewport
       type(SingleButton), allocatable :: button_array(:)
       ! auxiliary pointer to  next Viewport object
       type(Viewport), pointer :: next => null()
+      ! associated graphic device
+      integer :: idn
     contains
         procedure :: mouse_inside
         procedure :: plot_boundary
@@ -53,6 +55,13 @@ contains
 
         real :: x(5), y(5)
         logical :: verbose
+
+        ! protection
+        if (this%idn.eq.0) then
+            stop 'ERROR: graphic device has not been opened'
+        else
+            call pgslct(this%idn)
+        end if
 
         ! default values
         verbose = .false.
@@ -106,6 +115,13 @@ contains
         real :: x1v, x2v, y1v, y2v
         real :: pgsch_old
         real :: xp(4), yp(4)
+
+        ! protection
+        if (this%idn.eq.0) then
+            stop 'ERROR: graphic device has not been opened'
+        else
+            call pgslct(this%idn)
+        end if
 
         num_max = size(this%button_array)
 

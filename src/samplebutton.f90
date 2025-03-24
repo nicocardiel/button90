@@ -2,7 +2,7 @@ program samplebutton
     use pgbutt_modules
     implicit none
 
-    type(CanvasDef) :: canvas
+    type(CanvasDef) :: canvas1, canvas2
     type(Viewport), pointer :: ptr1, ptr2
     type(Viewport), pointer :: ptr
     integer :: i
@@ -15,11 +15,13 @@ program samplebutton
     logical :: verbose = .false.
 
     ! open graphics output
-    call rpgbegin(verbose)
+    call canvas1%rpgopen('1/Xserve', .true.)
+    call canvas2%rpgopen('2/Xserve', .true.)
 
     ! define viewports for buttons and plots
-    call canvas%add_button_viewport(0.05, 0.95, 0.80, 0.95, 6, 2, ptr1)
-    call canvas%add_plot_viewport(0.10, 0.95, 0.10, 0.70, ptr2)
+    call canvas1%add_button_viewport(0.05, 0.95, 0.80, 0.95, 6, 2, ptr1)
+    call canvas2%add_plot_viewport(0.10, 0.95, 0.10, 0.70, ptr2)
+    call pgslct(canvas1%idn)
 
     ! define buttons in selected viewport
     call ptr1%button(1, 'sin', 0)
@@ -39,7 +41,7 @@ program samplebutton
 
     ! main loop
     do
-        call canvas%get_button_from_mouse(xc, yc, ch, ptr, nb, verbose)
+        call canvas1%get_button_from_mouse(xc, yc, ch, ptr, nb, verbose)
         
         if (associated(ptr, ptr1)) then
             if (nb.eq.1) then

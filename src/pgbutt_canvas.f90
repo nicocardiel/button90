@@ -5,6 +5,7 @@ module pgbutt_canvas
     implicit none
 
     type :: CanvasDef
+        integer :: idn=0
         type(LinkedViewports) :: list_button_viewports
         type(LinkedViewports) :: list_plot_viewports
     contains
@@ -13,6 +14,7 @@ module pgbutt_canvas
         procedure :: add_button_viewport
         procedure :: add_plot_viewport
         procedure :: plot_viewport_boundaries
+        procedure :: rpgopen
     end type CanvasDef
 
 contains
@@ -29,6 +31,13 @@ contains
 
         integer :: i, num
         logical :: verbose
+
+        ! protection
+        if (this%idn.eq.0) then
+            stop 'ERROR: graphic device has not been opened'
+        else
+            call pgslct(this%idn)
+        end if
 
         ! default values
         verbose = .false.
@@ -83,6 +92,13 @@ contains
 
         logical :: verbose
 
+        ! protection
+        if (this%idn.eq.0) then
+            stop 'ERROR: graphic device has not been opened'
+        else
+            call pgslct(this%idn)
+        end if
+
         ! default values
         verbose = .false.
         if (present(verbose_)) verbose = verbose_
@@ -103,11 +119,12 @@ contains
     !--------------------------------------------------------------------------
     !> Add a generic viewport
     !--------------------------------------------------------------------------
-    subroutine add_viewport(list, x1v, x2v, y1v, y2v, &
+    subroutine add_viewport(list, idn, x1v, x2v, y1v, y2v, &
                             nx_, ny_, x1w_, x2w_, y1w_, y2w_, &
                             new_viewport)
         implicit none
         type(LinkedViewports), intent(inout) :: list
+        integer, intent(in) :: idn
         real, intent(in) :: x1v, x2v, y1v, y2v
         integer, intent(in), optional :: nx_, ny_
         real, intent(in), optional :: x1w_, x2w_, y1w_, y2w_
@@ -138,6 +155,7 @@ contains
         if (present(y2w_)) y2w = y2w_
 
         allocate(new_viewport)
+        new_viewport%idn = idn
         new_viewport%x1v = x1v
         new_viewport%x2v = x2v
         new_viewport%y1v = y1v
@@ -204,6 +222,13 @@ contains
         integer, intent(in) :: nx, ny
         type(Viewport), pointer, intent(out) :: new_viewport
 
+        ! protection
+        if (this%idn.eq.0) then
+            stop 'ERROR: graphic device has not been opened'
+        else
+            call pgslct(this%idn)
+        end if
+
         if (nx .lt. 1) then
             print *, 'Invalid nx=', nx
         end if
@@ -211,6 +236,7 @@ contains
             print *, 'Invalid ny=', ny
         end if
         call add_viewport(this%list_button_viewports, &
+                          this%idn, &
                           x1v, x2v, y1v, y2v, &
                           nx_=nx, ny_=ny, &
                           new_viewport=new_viewport)
@@ -226,7 +252,15 @@ contains
         real :: x1v, x2v, y1v, y2v
         type(Viewport), pointer, intent(out) :: new_viewport
 
+        ! protection
+        if (this%idn.eq.0) then
+            stop 'ERROR: graphic device has not been opened'
+        else
+            call pgslct(this%idn)
+        end if
+
         call add_viewport(this%list_plot_viewports, &
+                          this%idn, &
                           x1v, x2v, y1v, y2v, &
                           new_viewport=new_viewport)
     end subroutine add_plot_viewport
@@ -243,6 +277,13 @@ contains
         integer :: old_line_style
         type(Viewport), pointer :: viewport_ptr
         logical :: verbose
+
+        ! protection
+        if (this%idn.eq.0) then
+            stop 'ERROR: graphic device has not been opened'
+        else
+            call pgslct(this%idn)
+        end if
 
         ! default values
         verbose = .false.
@@ -267,5 +308,55 @@ contains
             end do
         end if
     end subroutine plot_viewport_boundaries
+
+    !--------------------------------------------------------------------------
+    !> Open graphics device
+    !--------------------------------------------------------------------------
+    subroutine rpgopen(this, device, verbose_)
+        implicit none
+        class(CanvasDef), intent(inout) :: this
+        character(len=*), intent(in) :: device
+        logical, intent(in), optional :: verbose_
+
+        integer :: pgopen, istatus
+        logical :: verbose
+
+        ! default values
+        verbose = .false.
+        if (present(verbose_)) verbose = verbose_
+
+        do
+            istatus = pgopen(device)
+            if (istatus.gt.0) then
+                this%idn = istatus
+                exit
+            else
+                print *, 'istatus:', istatus
+                stop 'ERROR calling pgopen'
+            end if
+        end do
+        call pgask(.false.)
+
+        call pgvport(0., 1., 0., 1.)
+        call pgwindow(0., 1., 0., 1.)
+        if (verbose) then
+            call pgsci(7)
+            call pgmove(0.01, 0.01)
+            call pgdraw(0.99, 0.01)
+            call pgdraw(0.99, 0.99)
+            call pgdraw(0.01, 0.99)
+            call pgdraw(0.01, 0.01)
+            call pgsci(1)
+        end if
+
+        ! Redefine colors
+        !   0: black
+        !   1: white
+        call pgscr(12,0.5,0.5,0.5) ! intermediate gray 
+        call pgscr(13,0.7,0.7,0.7) ! light gray
+        call pgscr(14,0.3,0.3,0.3) ! dark gray
+        call pgscr(15,0.6,0.6,0.6) ! almost intermediate gray
+
+    end subroutine rpgopen
 
 end module pgbutt_canvas
