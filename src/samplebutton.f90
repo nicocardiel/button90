@@ -8,19 +8,36 @@ program samplebutton
     integer :: i
     integer :: nb
     integer :: ncolor=1
+    integer :: ngrdev
     real :: xc, yc
     real :: xworld, yworld
     real :: xx(100), yy(100)
     character(len=1) ch
     logical :: verbose = .false.
 
+    do
+        write(*, '(a,$)') 'Number of graphic devices (1 or 2)? '
+        read(*, *) ngrdev
+        if ((ngrdev.eq.1) .or. (ngrdev.eq.2)) exit
+    end do
+
     ! open graphics output
-    call canvas1%rpgopen('1/Xserve', .true.)
-    call canvas2%rpgopen('2/Xserve', .true.)
+    if (ngrdev.eq.1) then
+        call canvas1%rpgopen('1/Xserve', .true.)
+    else
+        call canvas1%rpgopen('1/Xserve', .true.)
+        call canvas2%rpgopen('2/Xserve', .true.)
+    end if
 
     ! define viewports for buttons and plots
     call canvas1%add_button_viewport(0.05, 0.95, 0.80, 0.95, 6, 2, ptr1)
-    call canvas2%add_plot_viewport(0.10, 0.95, 0.10, 0.70, ptr2)
+    if (ngrdev.eq.1) then
+        call canvas1%add_plot_viewport(0.10, 0.95, 0.10, 0.70, ptr2)
+    else
+        call canvas2%add_plot_viewport(0.10, 0.95, 0.10, 0.70, ptr2)
+    end if
+
+    ! important: activate the correct graphic device
     call pgslct(canvas1%idn)
 
     ! define buttons in selected viewport
